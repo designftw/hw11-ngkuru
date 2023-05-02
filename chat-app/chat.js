@@ -309,6 +309,12 @@ const Name = {
 const Like = {
   props: ["messageid"],
 
+  data(){
+    return {
+      likeButtonActive: false,
+    }
+  },
+
   setup(props) {
     const $gf = Vue.inject('graffiti')
     const messageid = Vue.toRef(props, 'messageid')
@@ -337,12 +343,14 @@ const Like = {
     toggleLike() {
       if (this.myLikes.length) {
         this.$gf.remove(...this.myLikes)
+        this.likeButtonActive = false;
       } else {
         this.$gf.post({
           type: 'Like',
           object: this.messageid,
           context: [this.messageid]
         })
+        this.likeButtonActive = true;
       }
     }
   },

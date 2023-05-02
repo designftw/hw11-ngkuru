@@ -68,7 +68,6 @@
       <ul>
         <!-- List all the messages -->
         <li v-for="message of messages" :key="message.id">
-
           <!-- Display and edit form if we're editing a message -->
           <form v-if="editID==message.id" @submit.prevent="saveEditMessage(message)">
             <input v-model="editText">
@@ -102,6 +101,7 @@
               <p>(edited on {{ message.updated }})</p>
             </template>
 
+            <!-- Like, edit, delete -->
             <div>
               <like :messageid="message.id"></like>
               <template v-if="message.actor==$gf.me">
@@ -115,7 +115,7 @@
             </div>
           </div>
         </li>
-        </li>
+      </ul>
     </template>
   </div>
 
@@ -141,7 +141,9 @@
   </template>
 
   <template id="like">
-    <button @click="toggleLike">
+    <button :class="{
+      'like-button-active': likeButtonActive, 
+    }" @click="toggleLike">
       {{ myLikes.length? 'Unlike' : 'Like' }}
     </button>
     # of likes: {{ numLikes }}

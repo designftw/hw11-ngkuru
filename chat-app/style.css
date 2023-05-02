@@ -5,3 +5,26 @@
 .message-header .minor-info {
     font-weight: normal;
 }
+
+@keyframes flash {
+    0% {
+        background-color: buttonface;
+    }
+    50% {
+        background-color: red;
+    }
+    100% {
+        background-color: buttonface;
+    }
+}
+
+button {
+    background-color: buttonface;
+}
+
+.like-button-active {
+    animation-name: flash;
+    animation-duration: 0.4s;
+    background-color: buttonface;
+    animation-timing-function: cubic-bezier(.7,.89,.68,1.17);
+}
