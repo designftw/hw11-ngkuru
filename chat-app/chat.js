@@ -14,7 +14,7 @@ const app = {
 
   setup() {
     // Initialize the name of the channel we're chatting in
-    const channel = Vue.ref('default-demo')
+    const channel = Vue.ref('default')
 
     // And a flag for whether or not we're private-messaging
     const privateMessaging = Vue.ref(false)
@@ -51,7 +51,15 @@ const app = {
       myUsername: '',
       actorsToUsernames: {},
       /////////////////////////////
-      imageDownloads: {}
+      imageDownloads: {},
+      /////////////////////////////
+      savedChannels: [
+        "default",
+        "test",
+        "help",
+      ],
+      addingChannel: false,
+      recoverChannel: '',
     }
   },
 
@@ -185,6 +193,25 @@ const app = {
       message.content = this.editText
       // And clear the edit mark
       this.editID = ''
+    },
+
+    cancelEditMessage() {
+      this.editID = ''
+    },
+
+    startAddChannel() {
+      this.addingChannel = true;
+      this.recoverChannel = this.channel;
+    },
+
+    addChannel() {
+      this.savedChannels.push(this.channel);
+      this.addingChannel = false;
+    },
+
+    cancelAddChannel() {
+      this.channel = this.recoverChannel;
+      this.addingChannel = false;
     },
 
     /////////////////////////////
