@@ -22,7 +22,7 @@ const app = {
     // If we're private messaging use "me" as the channel,
     // otherwise use the channel value
     const $gf = Vue.inject('graffiti')
-    const context = Vue.computed(()=> privateMessaging.value? [$gf.me] : [channel.value])
+    const context = Vue.computed(() => privateMessaging.value ? [$gf.me] : [channel.value])
 
     // Initialize the collection of messages associated with the context
     const { objects: messagesRaw } = $gf.useObjects(context)
@@ -66,7 +66,7 @@ const app = {
   //////////////////////////////
   // Problem 3 solution
   watch: {
-    '$gf.me': async function(me) {
+    '$gf.me': async function (me) {
       this.myUsername = await this.resolver.actorToUsername(me)
     },
 
@@ -104,19 +104,19 @@ const app = {
         // Filter the "raw" messages for data
         // that is appropriate for our application
         // https://www.w3.org/TR/activitystreams-vocabulary/#dfn-note
-        .filter(m=>
+        .filter(m =>
           // Does the message have a type property?
-          m.type         &&
+          m.type &&
           // Is the value of that property 'Note'?
-          m.type=='Note' &&
+          m.type == 'Note' &&
           // Does the message have a content property?
           (m.content || m.content == '') &&
           // Is that property a string?
-          typeof m.content=='string')
+          typeof m.content == 'string')
 
       // Do some more filtering for private messaging
       if (this.privateMessaging) {
-        messages = messages.filter(m=>
+        messages = messages.filter(m =>
           // Is the message private?
           m.bto &&
           // Is the message to exactly one person?
@@ -132,13 +132,13 @@ const app = {
       return messages
         // Sort the messages with the
         // most recently created ones first
-        .sort((m1, m2)=> new Date(m2.published) - new Date(m1.published))
+        .sort((m1, m2) => new Date(m2.published) - new Date(m1.published))
         // Only show the 10 most recent ones
-        .slice(0,10)
+        .slice(0, 10)
     },
 
     messagesWithAttachments() {
-      return this.messages.filter(m=>
+      return this.messages.filter(m =>
         m.attachment &&
         m.attachment.type == 'Image' &&
         typeof m.attachment.magnet == 'string')
@@ -256,17 +256,17 @@ const Name = {
       return this.objects
         // Filter the raw objects for profile data
         // https://www.w3.org/TR/activitystreams-vocabulary/#dfn-profile
-        .filter(m=>
+        .filter(m =>
           // Does the message have a type property?
           m.type &&
           // Is the value of that property 'Profile'?
-          m.type=='Profile' &&
+          m.type == 'Profile' &&
           // Does the message have a name property?
           m.name &&
           // Is that property a string?
-          typeof m.name=='string')
+          typeof m.name == 'string')
         // Choose the most recent one or null if none exists
-        .reduce((prev, curr)=> !prev || curr.published > prev.published? curr : prev, null)
+        .reduce((prev, curr) => !prev || curr.published > prev.published ? curr : prev, null)
     }
   },
 
@@ -282,7 +282,7 @@ const Name = {
       this.editing = true
       // If we already have a profile,
       // initialize the edit text to our existing name
-      this.editText = this.profile? this.profile.name : this.editText
+      this.editText = this.profile ? this.profile.name : this.editText
     },
 
     saveName() {
@@ -309,7 +309,7 @@ const Name = {
 const Like = {
   props: ["messageid"],
 
-  data(){
+  data() {
     return {
       likeButtonActive: false,
     }
@@ -324,18 +324,18 @@ const Like = {
 
   computed: {
     likes() {
-      return this.likesRaw.filter(l=>
+      return this.likesRaw.filter(l =>
         l.type == 'Like' &&
         l.object == this.messageid)
     },
 
     numLikes() {
       // Unique number of actors
-      return [...new Set(this.likes.map(l=>l.actor))].length
+      return [...new Set(this.likes.map(l => l.actor))].length
     },
 
     myLikes() {
-      return this.likes.filter(l=> l.actor == this.$gf.me)
+      return this.likes.filter(l => l.actor == this.$gf.me)
     }
   },
 
@@ -358,7 +358,67 @@ const Like = {
   template: '#like'
 }
 
-app.components = { Name, Like }
+const Read = {
+  props: ["messageid", "actorstousernames"],
+
+  data() {
+    return ({
+      actorsToUsernames: {},
+    })
+  },
+
+  setup(props) {
+    const $gf = Vue.inject('graffiti')
+    const messageid = Vue.toRef(props, 'messageid')
+    // const actorsToUsernames = Vue.toRef(props, 'actorstousernames')
+    const { objects: readsRaw } = $gf.useObjects([messageid])
+    return { readsRaw }
+  },
+
+  created() {
+    // Import resolver
+    this.resolver = new Resolver(this.$gf)
+
+    if (!this.myReads.length) {
+      this.$gf.post({
+        type: 'Read',
+        object: this.messageid,
+        context: [this.messageid]
+      })
+    }
+  },
+
+  computed: {
+    reads() {
+      return this.readsRaw.filter(r =>
+        r.type == 'Read' &&
+        r.object == this.messageid)
+    },
+
+    whoRead() {
+      // Unique number of actors
+      return [...new Set(this.reads.map(r => this.actorsToUsernames[r.actor]))]
+    },
+
+    myReads() {
+      return this.reads.filter(r => r.actor == this.$gf.me)
+    }
+  },
+
+  watch: {
+    async reads(reads) {
+      for (const r of reads) {
+        if (!(r.actor in this.actorsToUsernames)) {
+          this.actorsToUsernames[r.actor] = await this.resolver.actorToUsername(r.actor)
+        }
+      }
+    },
+  },
+
+  template: '#read'
+}
+
+app.components = { Name, Like, Read }
 Vue.createApp(app)
-   .use(GraffitiPlugin(Vue))
-   .mount('#app')
+  .use(GraffitiPlugin(Vue))
+  .mount('#app')

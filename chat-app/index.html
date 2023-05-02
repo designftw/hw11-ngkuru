@@ -101,6 +101,8 @@
               <p>(edited on {{ message.updated }})</p>
             </template>
 
+            <read :messageid="message.id" :actorstousernames="actorsToUsernames"></read>
+
             <!-- Like, edit, delete -->
             <div>
               <like :messageid="message.id"></like>
@@ -147,6 +149,10 @@
       {{ myLikes.length? 'Unlike' : 'Like' }}
     </button>
     # of likes: {{ numLikes }}
+  </template>
+
+  <template id="read">
+    <p>Read by {{ whoRead }}</p>
   </template>
 </body>
 
