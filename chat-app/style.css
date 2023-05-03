@@ -36,3 +36,7 @@ button {
 .reply-to {
     font-style: italic;
 }
+
+img {
+    max-width: 50%;
+}

@@ -79,11 +79,13 @@
           <!-- Otherwise, display a bunch of properties from the message -->
           <div v-else>
             <p class="message-header">
-              <name :actor="message.actor"></name> <span class="minor-info">({{ actorsToUsernames[message.actor]
-                }})</span> said on <span class="minor-info">{{ message.published }}</span> <span
-                class="reply-to minor-info" v-if="message.inReplyTo">in reply to {{
-                actorsToUsernames[findMessage(message.inReplyTo).actor] }}: {{ findMessage(message.inReplyTo).content
-                }}</span>:
+              <!-- <profile :actor="message.actor"></profile> -->
+              <name :actor="message.actor"></name>
+              <span class="minor-info">({{ actorsToUsernames[message.actor] }})</span>
+              said on <span class="minor-info">{{ message.published }}</span>
+              <span class="reply-to minor-info" v-if="message.inReplyTo">
+                in reply to {{actorsToUsernames[findMessage(message.inReplyTo).actor] }}:
+                {{ findMessage(message.inReplyTo).content }}</span>:
             </p>
 
             <p>{{ message.content }}</p>
@@ -167,15 +169,19 @@
   <template id="reply">
     <span class="controls">
       <button v-if="!isReplying" @click="startReplying()">Reply</button>
+
       <form v-else @submit.prevent="sendMessage">
         <input v-model="messageText" placeholder="Type a message..." />
         <input type="submit" value="Send" />
         <button @click="cancelReplying()">Cancel</button>
       </form>
-      <slot>
-
-      </slot>
     </span>
+  </template>
+
+  <template id="profile">
+    <!-- <img v-if="picture" :src="picture" />
+    <span v-else>X</span> -->
+    X
   </template>
 </body>
 

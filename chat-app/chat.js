@@ -83,8 +83,8 @@ const app = {
 
     async messagesWithAttachments(messages) {
       for (const m of messages) {
-        if (!(m.attachment.maget in this.imageDownloads)) {
-          let blob
+        if (!(m.attachment.magnet in this.imageDownloads)) {
+          let blob;
           try {
             blob = await this.$gf.media.fetch(m.attachment.magnet)
           } catch {
@@ -141,7 +141,8 @@ const app = {
       return this.messages.filter(m =>
         m.attachment &&
         m.attachment.type == 'Image' &&
-        typeof m.attachment.magnet == 'string')
+        typeof m.attachment.magnet == 'string'
+      )
     }
   },
 
@@ -463,6 +464,61 @@ const Reply = {
 
   template: '#reply'
 }
+
+// const Profile = {
+//   props: ['actor', 'editable'],
+
+//   setup(props) {
+//     // Get a collection of all objects associated with the actor
+//     const { actor } = Vue.toRefs(props)
+//     const $gf = Vue.inject('graffiti')
+//     return $gf.useObjects([actor])
+//   },
+
+//   computed: {
+//     profile() {
+//       return this.objects
+//         .filter(m =>
+//           m.type &&
+//           m.type == 'Profile' &&
+//           m.icon &&
+//           m.icon.type == 'Image' &&
+//           m.icon.magnet)
+//         .reduce((prev, curr) => !prev || curr.published > prev.published ? curr : prev, null)
+//     }
+//   },
+
+//   data() {
+//     return {
+//       file: null,
+//       blob: undefined,
+//     }
+//   },
+
+//   methods: {
+//     onImageAttachment(event) {
+//       const file = event.target.files[0]
+//       this.file = file
+//     },
+
+//     async changePicture() {
+//       if (this.profile) {
+//         this.profile.icon.magnet = await this.$gf.media.store(this.file);
+//       } else {
+//         this.$gf.post({
+//           type: 'Profile',
+//           icon: {
+//             type: "Image",
+//             magnet: await this.$gf.media.store(this.file),
+//           }
+//         });
+//       }
+//       this.file = null;
+//     },
+//   },
+
+//   template: '#profile'
+// }
 
 app.components = { Name, Like, Read, Reply }
 Vue.createApp(app)
