@@ -237,6 +237,10 @@ const app = {
     onImageAttachment(event) {
       const file = event.target.files[0]
       this.file = file
+    },
+
+    findMessage(id) {
+      return this.messages.filter(m => m.id === id)[0];
     }
   }
 }
@@ -359,7 +363,7 @@ const Like = {
 }
 
 const Read = {
-  props: ["messageid", "actorstousernames"],
+  props: ["messageid"],
 
   data() {
     return ({
@@ -418,7 +422,49 @@ const Read = {
   template: '#read'
 }
 
-app.components = { Name, Like, Read }
+const Reply = {
+  props: ["messageid", "channel"],
+
+  data() {
+    return ({
+      messageText: '',
+      isReplying: false,
+    })
+  },
+
+  setup(props) {
+    const $gf = Vue.inject('graffiti')
+    const messageid = Vue.toRef(props, 'messageid')
+    const channel = Vue.toRef(props, 'channel')
+  },
+
+  methods: {
+    startReplying() {
+      this.isReplying = true;
+    },
+
+    cancelReplying() {
+      this.isReplying = false;
+      this.messageText = '';
+    },
+
+    async sendMessage() {
+      this.$gf.post({
+        type: 'Note',
+        content: this.messageText,
+        inReplyTo: this.messageid,
+        context: [this.channel],
+      });
+
+      this.messageText = '';
+      this.isReplying = false;
+    },
+  },
+
+  template: '#reply'
+}
+
+app.components = { Name, Like, Read, Reply }
 Vue.createApp(app)
   .use(GraffitiPlugin(Vue))
   .mount('#app')

@@ -28,3 +28,11 @@ button {
     background-color: buttonface;
     animation-timing-function: cubic-bezier(.7,.89,.68,1.17);
 }
+
+.controls ~ .controls {
+    margin-left: 8px;
+}
+
+.reply-to {
+    font-style: italic;
+}

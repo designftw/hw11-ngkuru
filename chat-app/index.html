@@ -26,7 +26,6 @@
 
     <!-- If we're not logged in, hide everything except the login button -->
     <template v-if="$gf.me">
-
       <!-- Begin Problem 1 Solution -->
       <p>
       <form @submit.prevent="setUsername">
@@ -37,11 +36,13 @@
       </p>
       <!-- End Problem 1 Solution -->
 
+      <!-- Name -->
       <p>
         My Name Is: <name :actor="$gf.me" :editable="true"></name>
       </p>
 
-      <p v-if="!privateMessaging">
+      <!-- Channel list -->
+      <p>
         <label for="channel">
           Change the channel you're chatting in:
         </label>
@@ -79,7 +80,10 @@
           <div v-else>
             <p class="message-header">
               <name :actor="message.actor"></name> <span class="minor-info">({{ actorsToUsernames[message.actor]
-                }})</span> said on <span class="minor-info">{{ message.published }}</span>:
+                }})</span> said on <span class="minor-info">{{ message.published }}</span> <span
+                class="reply-to minor-info" v-if="message.inReplyTo">in reply to {{
+                actorsToUsernames[findMessage(message.inReplyTo).actor] }}: {{ findMessage(message.inReplyTo).content
+                }}</span>:
             </p>
 
             <p>{{ message.content }}</p>
@@ -101,16 +105,17 @@
               <p>(edited on {{ message.updated }})</p>
             </template>
 
-            <read :messageid="message.id" :actorstousernames="actorsToUsernames"></read>
+            <read :messageid="message.id"></read>
 
             <!-- Like, edit, delete -->
             <div>
               <like :messageid="message.id"></like>
+              <reply :messageid="message.id" :channel="channel"></reply>
               <template v-if="message.actor==$gf.me">
-                <button @click="startEditMessage(message)">
+                <button class="controls" @click="startEditMessage(message)">
                   Edit
                 </button>
-                <button @click="removeMessage(message)">
+                <button class="controls" @click="removeMessage(message)">
                   Delete
                 </button>
               </template>
@@ -143,16 +148,34 @@
   </template>
 
   <template id="like">
-    <button :class="{
-      'like-button-active': likeButtonActive, 
-    }" @click="toggleLike">
-      {{ myLikes.length? 'Unlike' : 'Like' }}
-    </button>
-    # of likes: {{ numLikes }}
+    <span class="controls">
+      <button :class="{
+          'like-button-active': likeButtonActive, 
+        }" @click="toggleLike">
+        {{ myLikes.length? 'Unlike' : 'Like' }}
+      </button>
+      # of likes: {{ numLikes }}
+    </span>
   </template>
 
   <template id="read">
-    <p>Read by {{ whoRead }}</p>
+    <span class="controls">
+      <p>Read by {{ whoRead }}</p>
+    </span>
+  </template>
+
+  <template id="reply">
+    <span class="controls">
+      <button v-if="!isReplying" @click="startReplying()">Reply</button>
+      <form v-else @submit.prevent="sendMessage">
+        <input v-model="messageText" placeholder="Type a message..." />
+        <input type="submit" value="Send" />
+        <button @click="cancelReplying()">Cancel</button>
+      </form>
+      <slot>
+
+      </slot>
+    </span>
   </template>
 </body>
 
