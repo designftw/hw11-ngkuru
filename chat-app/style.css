@@ -46,6 +46,8 @@ img {
     max-height: 30px;
     aspect-ratio: 1/1;
     border-radius: 50%;
+
+    transition-duration: 0.4s;
 }
 
 label ~ .profile-picture {
@@ -54,4 +56,63 @@ label ~ .profile-picture {
 
 .profile-picture + span {
     margin-left: 8px;
+}
+
+.profile-picture:hover {
+    transform: scale(2);
+}
+
+.edit-message {
+    animation-name: pop-up;
+    animation-duration: 0.4s;
+    transform-origin: left;
+}
+
+@keyframes pop-up {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.is-edited {
+    animation: border-flash 2s ease-in-out;
+    border-radius: 2%;
+}
+
+@keyframes border-flash {
+    0% {
+        border: none;
+    }
+    50% {
+        border: 1px red solid;
+    }
+    100% {
+        border: none;
+    }
+}
+
+li {
+    padding-left: 4px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+button:not(:disabled) {
+    animation: ready 0.4s;
+}
+
+@keyframes ready {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.25);
+
+    }
+    100% {
+        transform: scale(1);
+    }
 }

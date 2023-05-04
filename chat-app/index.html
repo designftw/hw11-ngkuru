@@ -38,7 +38,7 @@
 
       <!-- Name -->
       <p>
-        My Name Is: 
+        My Name Is:
         <name :actor="$gf.me" :editable="true"></name>
         <br></br>
         <label>My profile picture:</label>
@@ -72,9 +72,11 @@
 
       <ul>
         <!-- List all the messages -->
-        <li v-for="message of messages" :key="message.id">
+        <li v-for="message of messages" :key="message.id" :class="{
+          'is-edited': message.updated!==message.published,
+        }">
           <!-- Display and edit form if we're editing a message -->
-          <form v-if="editID==message.id" @submit.prevent="saveEditMessage(message)">
+          <form class="edit-message" v-if="editID==message.id" @submit.prevent="saveEditMessage(message)">
             <input v-model="editText">
             <input type="submit" value="Save" />
             <button @click="cancelEditMessage()">Cancel</button>
@@ -184,10 +186,10 @@
 
   <template id="profile">
     <template v-if="picture !== undefined">
-      <img v-if="picture" :src="picture" class="profile-picture"/>
+      <img v-if="picture" :src="picture" class="profile-picture" />
       <span v-else>Fail</span>
     </template>
-    
+
     <span v-else>X</span>
 
     <div v-if="editable">
