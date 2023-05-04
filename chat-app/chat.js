@@ -14,7 +14,7 @@ const app = {
 
   setup() {
     // Initialize the name of the channel we're chatting in
-    const channel = Vue.ref('default')
+    const channel = Vue.ref('default-demo')
 
     // And a flag for whether or not we're private-messaging
     const privateMessaging = Vue.ref(false)
@@ -55,8 +55,10 @@ const app = {
       /////////////////////////////
       savedChannels: [
         "default",
+        "default-demo",
         "test",
         "help",
+        "newchannel",
       ],
       addingChannel: false,
       recoverChannel: '',
@@ -154,7 +156,6 @@ const app = {
       }
 
       if (this.file) {
-        console.log("got a file!")
         message.attachment = {
           type: 'Image',
           magnet: await this.$gf.media.store(this.file)
@@ -389,7 +390,7 @@ const Read = {
         type: 'Read',
         object: this.messageid,
         context: [this.messageid]
-      })
+      });
     }
   },
 
@@ -465,62 +466,76 @@ const Reply = {
   template: '#reply'
 }
 
-// const Profile = {
-//   props: ['actor', 'editable'],
+const Profile = {
+  props: ['actor', 'editable'],
 
-//   setup(props) {
-//     // Get a collection of all objects associated with the actor
-//     const { actor } = Vue.toRefs(props)
-//     const $gf = Vue.inject('graffiti')
-//     return $gf.useObjects([actor])
-//   },
+  setup(props) {
+    // Get a collection of all objects associated with the actor
+    const { actor } = Vue.toRefs(props)
+    const $gf = Vue.inject('graffiti')
+    return $gf.useObjects([actor])
+  },
 
-//   computed: {
-//     profile() {
-//       return this.objects
-//         .filter(m =>
-//           m.type &&
-//           m.type == 'Profile' &&
-//           m.icon &&
-//           m.icon.type == 'Image' &&
-//           m.icon.magnet)
-//         .reduce((prev, curr) => !prev || curr.published > prev.published ? curr : prev, null)
-//     }
-//   },
+  computed: {
+    profile() {
+      return this.objects
+        .filter(m =>
+          m.type &&
+          m.type == 'Profile' &&
+          m.icon &&
+          m.icon.type == 'Image' &&
+          m.icon.magnet
+        )
+        .reduce((prev, curr) => !prev || curr.published > prev.published ? curr : prev, null)
+    }
+  },
 
-//   data() {
-//     return {
-//       file: null,
-//       blob: undefined,
-//     }
-//   },
+  data() {
+    return {
+      file: null,
+      picture: undefined,
+    }
+  },
 
-//   methods: {
-//     onImageAttachment(event) {
-//       const file = event.target.files[0]
-//       this.file = file
-//     },
+  methods: {
+    onImageAttachment(event) {
+      const file = event.target.files[0]; 
+      this.file = file;
+    },
 
-//     async changePicture() {
-//       if (this.profile) {
-//         this.profile.icon.magnet = await this.$gf.media.store(this.file);
-//       } else {
-//         this.$gf.post({
-//           type: 'Profile',
-//           icon: {
-//             type: "Image",
-//             magnet: await this.$gf.media.store(this.file),
-//           }
-//         });
-//       }
-//       this.file = null;
-//     },
-//   },
+    async changePicture() {
+      if (this.profile) {
+        this.profile.icon.magnet = await this.$gf.media.store(this.file);
+      } else {
+        this.$gf.post({
+          type: 'Profile',
+          icon: {
+            type: "Image",
+            magnet: await this.$gf.media.store(this.file),
+          },
+        });
+      }
+      this.file = null;
+    },
+  },
 
-//   template: '#profile'
-// }
+  watch: {
+    async profile(profile) {
+      let blob;
+      try {
+        blob = await this.$gf.media.fetch(profile.icon.magnet);
+        this.picture = URL.createObjectURL(blob);
+      } catch (error) {
+        console.log(error);
+        this.picture = null;
+      }
+    },
+  },
 
-app.components = { Name, Like, Read, Reply }
+  template: '#profile'
+}
+
+app.components = { Name, Like, Read, Reply, Profile }
 Vue.createApp(app)
   .use(GraffitiPlugin(Vue))
   .mount('#app')

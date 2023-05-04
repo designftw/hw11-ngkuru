@@ -38,7 +38,11 @@
 
       <!-- Name -->
       <p>
-        My Name Is: <name :actor="$gf.me" :editable="true"></name>
+        My Name Is: 
+        <name :actor="$gf.me" :editable="true"></name>
+        <br></br>
+        <label>My profile picture:</label>
+        <profile :actor="$gf.me" :editable="true"></profile>
       </p>
 
       <!-- Channel list -->
@@ -79,7 +83,7 @@
           <!-- Otherwise, display a bunch of properties from the message -->
           <div v-else>
             <p class="message-header">
-              <!-- <profile :actor="message.actor"></profile> -->
+              <profile :actor="message.actor"></profile>
               <name :actor="message.actor"></name>
               <span class="minor-info">({{ actorsToUsernames[message.actor] }})</span>
               said on <span class="minor-info">{{ message.published }}</span>
@@ -179,9 +183,18 @@
   </template>
 
   <template id="profile">
-    <!-- <img v-if="picture" :src="picture" />
-    <span v-else>X</span> -->
-    X
+    <template v-if="picture !== undefined">
+      <img v-if="picture" :src="picture" class="profile-picture"/>
+      <span v-else>Fail</span>
+    </template>
+    
+    <span v-else>X</span>
+
+    <div v-if="editable">
+      <br>
+      <input type="file" accept="image/*" @change="onImageAttachment" />
+      <button @click="changePicture()" :disabled="!file">Set Profile Picture</button>
+    </div>
   </template>
 </body>
 

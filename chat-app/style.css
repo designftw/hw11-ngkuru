@@ -40,3 +40,18 @@ button {
 img {
     max-width: 50%;
 }
+
+.profile-picture {
+    max-width: 30px;
+    max-height: 30px;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+}
+
+label ~ .profile-picture {
+    margin-left: 8px;
+}
+
+.profile-picture + span {
+    margin-left: 8px;
+}
