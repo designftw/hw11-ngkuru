@@ -1,1 +1,5 @@
 /* css for all of your write ups here */
+img {
+    max-width: 600px;
+    width: 50%;
+}

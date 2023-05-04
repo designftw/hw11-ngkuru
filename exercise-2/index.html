@@ -1,13 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<title>Exercise 2</title>
-		<link rel="stylesheet" href="writeup.css" />
-	</head>
-	<body>
-		<!-- your html here for exercise 2-->
-		<p>Here's a screenshot where I get the reads and the profile pictures.</p>	
-		<img src="./images/screenshot.png" />
-	</body>
+
+<head>
+	<meta charset="UTF-8" />
+	<title>Exercise 2</title>
+	<link rel="stylesheet" href="writeup.css" />
+</head>
+
+<body>
+	<!-- your html here for exercise 2-->
+	<h1>Adding read, reply, profile to the chat app</h1>
+
+	<p>Here's a screenshot where I get the reads and the profile pictures.</p>
+	<img src="images/proof.png" alt="things are working" />
+
+	<p>Here's a reference screenshot for the below three designs:</p>
+	<img src="images/designs.png" alt="read receipts" />
+
+	<article>
+		<h2>Read receipts</h2>
+
+		<p>Read receipts are very similar to the like objects, except that the read message is sent on
+			<code>created()</code> instead of on a click. With every message, a list of usernames that read the message
+			are displayed to everyone. See the reference screenshot for demonstration.
+		</p>
+	</article>
+
+	<article>
+		<h2>Replies</h2>
+
+		<p>Replies get sent to the channel. To make this change, we set the context to the channel instead of the
+			message id. We add the username and content from <code>inReplyTo</code> at the end of the header for the
+			reply message. See the reference screenshot for demonstration.</p>
+	</article>
+
+	<article>
+		<h2>Profile pictures</h2>
+
+		<p>We added a section at the top like the one that changes the username to change the profile pictures. We made
+			it editable similar to how name is editable. We used the functionality from the image upload to upload
+			images and set them as profile pictures. For every message, we display the profile picture in the beginning
+			of the header. If there is no profile picture, we display 'X'. If there is a profile picture but it can't be
+			downloaded, we display 'Fail'. See the reference screenshot for demonstration.</p>
+	</article>
+</body>
+
 </html>
