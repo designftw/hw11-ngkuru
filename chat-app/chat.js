@@ -385,7 +385,9 @@ const Read = {
   created() {
     // Import resolver
     this.resolver = new Resolver(this.$gf)
+  },
 
+  mounted() {
     if (!this.myReads.length) {
       this.$gf.post({
         type: 'Read',
@@ -500,7 +502,7 @@ const Profile = {
 
   methods: {
     onImageAttachment(event) {
-      const file = event.target.files[0]; 
+      const file = event.target.files[0];
       this.file = file;
     },
 
