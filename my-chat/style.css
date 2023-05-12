@@ -1,0 +1,100 @@
+/* width requirement */
+@media (max-width: 600px) {
+    #error-screen {
+        display: none;
+    }
+}
+
+@media (min-width: 601px) {
+    #app {
+        display: none;
+    }
+}
+
+/* background color */
+
+body {
+    background-color: #EEDED5;
+}
+
+/* minor common adjustments */
+
+.bold {
+    font-weight: bold;
+}
+
+/* alignment start */
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+/* alignment end */
+
+.top-bar+.middle-block,
+.middle-block+.bottom-bar {
+    border-top: 1px solid;
+}
+
+.middle-block {
+    padding-top: 8px;
+}
+
+.channel-list-item {
+    /* padding */
+    padding-top: 4px;
+    padding-bottom: 4px;
+
+    /* height */
+    min-height: 32px;
+
+    /* centering */
+    display: flex;
+    align-items: center;
+}
+
+.channel-list-item+.channel-list-item {
+    border-top: 1px gray solid;
+}
+
+.navigator {
+    /* clickable */
+    cursor: pointer;
+}
+
+.navigator:hover {
+    color: maroon;
+}
+
+.chat-button {
+    width: 90%;
+    height: 5vh;
+
+    background-color: #864397;
+    border-radius: 25%;
+
+    font-weight: bold;
+    color: white;
+}
+
+.tasks-container {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.tasks-header {
+    margin-bottom: 4px;
+}
+
+.tasks-list {
+    border: 1px solid black;
+    border-radius: 5%;
+
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.task-content {
+    margin-right: 8px;
+}
