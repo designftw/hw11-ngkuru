@@ -34,12 +34,14 @@
                     <h2>My Channels</h2>
 
                     <!-- default channels -->
-                    <section class="channel-list-item navigator" v-for="ch of defaultChannels" @click="enterChannel(ch)">
+                    <section class="channel-list-item navigator" v-for="ch of defaultChannels"
+                        @click="enterChannel(ch)">
                         <span>{{ ch }}</span>
                     </section>
 
                     <!-- one entry for each channel -->
-                    <section class="channel-list-item navigator" v-for="ch of savedChannels" @click="enterChannel(ch.content)">
+                    <section class="channel-list-item navigator" v-for="ch of savedChannels"
+                        @click="enterChannel(ch.content)">
                         <span>{{ ch.content }}</span>
                         <button @click.stop="removeChannel(ch)">Delete</button>
                     </section>
@@ -141,7 +143,8 @@
 
                         <!-- task list -->
                         <div class="tasks-list">
-                            <section class="channel-list-item" v-for="task in tasks">
+                            <section class="task channel-list-item" v-for="task in tasks">
+                                <like :messageid="task.id"></like>
                                 <span class="task-content">{{ task.content }}</span>
                                 <button @click="removeTask(task)">Delete</button>
                             </section>
@@ -214,9 +217,6 @@
                                 </template>
 
                                 <li>
-                                    <like :messageid="message.id"></like>
-                                </li>
-                                <li>
                                     <replies :messageid="message.id"></replies>
                                 </li>
                                 <li>
@@ -246,10 +246,13 @@
     </template>
 
     <template id="like">
-        <button @click="toggleLike">
-            {{ myLikes.length? 'Unlike' : 'Like' }}
-        </button>
-        # of likes: {{ numLikes }}
+        <span :class="{ 'complete-task': numLikes > 0, }">
+            <button @click="toggleLike">
+                {{ myLikes.length? 'Incomplete' : 'Complete' }}
+            </button>
+            <span class="complete-count">{{ numLikes }}</span>
+            </span>
+        </span>
     </template>
 
     <template id="profile-picture">

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final writeup</title>
+</head>
+
+<body>
+    <h1>Final writeup</h1>
+
+    <p>To recall, this app serves students working on group projects, and integrates tasks with chats in a way which
+        exposes the members to the tasks before they can get to the chat screen.</p>
+
+    <p>Since the midpoint, we have made the following additions and changes:</p>
+
+    <ul>
+        <li>
+            We have implemented support for subscribing to channels (instead of hardcoded channel list that's lost every
+            time). The subscriptions are sent to the 'subscriptions' channel as a message with a 'Subscription' type,
+            and checked upon setup.
+        </li>
+        <li>
+            We have implemented channels and profile tabs. The profile tab contains the controls for username change
+            etc. This change was inspired by Prof. Karger's remarks during the studio that we do not need to have
+            controls on all the time.
+        </li>
+        <li>
+            We have decided against implementing the tasks tab. We believe that this requires keeping on with the
+            contexts of all the saved channels at all times, which we felt was against the point of having contexts and
+            switching between contexts in the first place.
+        </li>
+        <li>
+            We have refactored likes into completions (and likes are now gone from messages). We have also made style
+            changes to tasks for contrast (complete tasks are marked with line through). This also addresses the
+            student/instructor feedback from user testing in studio that the app should allow other people to complete
+            the tasks.
+        </li>
+        <li>
+            We have added editing support for tasks.
+        </li>
+        <li>
+            We have made significant style changes to how the messages are displayed.
+        </li>
+    </ul>
+</body>
+
+</html>

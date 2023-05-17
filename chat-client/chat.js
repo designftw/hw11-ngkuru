@@ -81,7 +81,7 @@ const app = {
 
       return tasks
         .sort((m1, m2) => new Date(m2.published) - new Date(m1.published))
-        .slice(0, 5);
+        .slice(0, 10);
     },
 
     savedChannels() {

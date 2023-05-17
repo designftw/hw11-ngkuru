@@ -95,6 +95,7 @@ body {
 .chat-button {
     width: 90%;
     height: 5vh;
+    cursor: pointer;
 
     background-color: #864397;
     border-radius: 25%;
@@ -128,4 +129,17 @@ body {
     height: 32px;
     aspect-ratio: 1 / 1;
     border-radius: 50%;
+}
+
+.complete-count {
+    margin-left: 2px;
+    margin-right: 8px;
+}
+
+.task:has(.complete-task) .task-content {
+    text-decoration: line-through;
+}
+
+.task-content {
+    font-style: italic;
 }
