@@ -143,3 +143,11 @@ body {
 .task-content {
     font-style: italic;
 }
+
+.message-header {
+    font-weight: bold;
+}
+
+.message-header .minor-info {
+    font-weight: normal;
+}

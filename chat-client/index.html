@@ -144,9 +144,18 @@
                         <!-- task list -->
                         <div class="tasks-list">
                             <section class="task channel-list-item" v-for="task in tasks">
-                                <like :messageid="task.id"></like>
-                                <span class="task-content">{{ task.content }}</span>
-                                <button @click="removeTask(task)">Delete</button>
+                                <form v-if="editTaskID==task.id" @submit.prevent="saveEditTask(task)">
+                                    <input v-model="editTaskText">
+                                    <input type="submit" value="Save" />
+                                    <button @click="cancelEditTask()">Cancel</button>
+                                </form>
+
+                                <template v-else>
+                                    <like :messageid="task.id"></like>
+                                    <span class="task-content">{{ task.content }}</span>
+                                    <button @click="startEditTask(task)">Edit</button>
+                                    <button @click="removeTask(task)">Delete</button>
+                                </template>
                             </section>
                         </div>
                     </div>
@@ -176,53 +185,51 @@
                             <form v-if="editID==message.id" @submit.prevent="saveEditMessage(message)">
                                 <input v-model="editText">
                                 <input type="submit" value="Save" />
+                                <button @click="cancelEditMessage()">Cancel</button>
                             </form>
 
                             <!-- Otherwise, display a bunch of properties from the message -->
-                            <ul v-else>
-                                <li>
-                                    Message: {{ message.content }}
-                                </li>
-                                <li>
-                                    From Name: <name :actor="message.actor"></name>
-                                </li>
-                                <li>
-                                    Profile Picture: <profile-picture :actor="message.actor"></profile-picture>
-                                </li>
-                                <li>
-                                    From Username: {{ actorsToUsernames[message.actor] }}
-                                </li>
-                                <li>
-                                    Published at Time: {{ message.published }}
-                                </li>
-                                <li>
-                                    Last Edited at Time: {{ message.updated }}
-                                </li>
+                            <div v-else>
+                                <p class="message-header">
+                                    <profile-picture :actor="message.actor"></profile-picture>
+                                    <name :actor="message.actor"></name>
+                                    <span class="minor-info">({{ actorsToUsernames[message.actor] }})</span>
+                                    said on <span class="minor-info">{{ message.published }}</span>
+                                </p>
 
-                                <li v-if="message.attachment && message.attachment.magnet">
+                                <p>{{ message.content }}</p>
+
+                                <template v-if="message.attachment && message.attachment.magnet">
                                     <magnet-img :src="message.attachment.magnet"></magnet-img>
-                                </li>
 
-                                <template v-if="message.actor==$gf.me">
-                                    <li>
-                                        <button @click="removeMessage(message)">
-                                            Delete Message
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button @click="startEditMessage(message)">
-                                            Edit Message
-                                        </button>
-                                    </li>
+                                    <br />
+                                    <br />
                                 </template>
 
-                                <li>
-                                    <replies :messageid="message.id"></replies>
-                                </li>
-                                <li>
-                                    <read-receipts :messageid="message.id"></read-receipts>
-                                </li>
-                            </ul>
+                                <template v-if="message.updated!==message.published">
+                                    <p>(edited on {{ message.updated }})</p>
+                                </template>
+
+                                <read-receipts :messageid="message.id"></read-receipts>
+
+                                <br />
+                                <br />
+
+                                <div>
+                                    <template v-if="message.actor==$gf.me">
+                                        <button class="controls" @click="startEditMessage(message)">
+                                            Edit
+                                        </button>
+                                        <button class="controls" @click="removeMessage(message)">
+                                            Delete
+                                        </button>
+                                        <br />
+                                        <br />
+                                    </template>
+                                </div>
+
+                                <replies :messageid="message.id"></replies>
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -251,7 +258,7 @@
                 {{ myLikes.length? 'Incomplete' : 'Complete' }}
             </button>
             <span class="complete-count">{{ numLikes }}</span>
-            </span>
+        </span>
         </span>
     </template>
 

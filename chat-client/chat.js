@@ -46,6 +46,8 @@ const app = {
       // task stuff
       addingTask: false,
       preferredTask: "",
+      editTaskID: "",
+      editTaskText: "",
       // text stuff
       messageText: "",
       file: null,
@@ -196,6 +198,22 @@ const app = {
       this.$gf.remove(task);
     },
 
+    startEditTask(task) {
+      this.editTaskID = task.id;
+      this.editTaskText = task.content;
+    },
+
+    saveEditTask(task) {
+      task.content = this.editTaskText;
+      this.editTaskID = "";
+      this.editTaskText = "";
+    },
+
+    cancelEditTask() {
+      this.editTaskID = "";
+      this.editTaskText = "";
+    },
+
     // message stuff
     async sendMessage() {
       const message = {
@@ -227,6 +245,11 @@ const app = {
 
     saveEditMessage(message) {
       message.content = this.editText;
+      this.editID = "";
+      this.editText = "";
+    },
+
+    cancelEditMessage() {
       this.editID = "";
       this.editText = "";
     },
