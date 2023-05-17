@@ -12,9 +12,9 @@
 
 <body>
     <!-- show nothing if screen is too wide -->
-    <div id="error-screen">
+    <!-- <div id="error-screen">
         <p>This app is not developed for widescreen users. Please reduce the width.</p>
-    </div>
+    </div> -->
 
     <!-- chat app -->
     <div id="app">
@@ -28,35 +28,20 @@
         <template v-if="$gf.me">
             <!-- main menu -->
             <div v-if="screen === 'mainMenu'">
-                <!-- top block -->
-                <div class="top-bar">
-                    <!-- set username -->
-                    <p>
-                    <form @submit.prevent="setUsername">
-                        <input v-model="preferredUsername" placeholder="Choose a username..." />
-                        <input type="submit" value="Set Username" />
-                    </form>
-                    {{ usernameResult }}
-                    </p>
-
-                    <!-- set profile name and picture -->
-                    <p>
-                        <span class="bold">My name is:</span>
-                        <name :actor="$gf.me" :editable="true"></name>
-                        <br>
-                        <span class="bold">My Profile Picture Is:</span>
-                        <profile-picture :actor="$gf.me" :editable="true"></profile-picture>
-                    </p>
-                </div>
-
                 <!-- center block -->
                 <div class="middle-block">
                     <!-- header -->
                     <h2>My Channels</h2>
 
-                    <!-- one entry for each group -->
-                    <section class="channel-list-item navigator" v-for="ch of savedChannels" @click="enterChannel(ch)">
+                    <!-- default channels -->
+                    <section class="channel-list-item navigator" v-for="ch of defaultChannels" @click="enterChannel(ch)">
                         <span>{{ ch }}</span>
+                    </section>
+
+                    <!-- one entry for each channel -->
+                    <section class="channel-list-item navigator" v-for="ch of savedChannels" @click="enterChannel(ch.content)">
+                        <span>{{ ch.content }}</span>
+                        <button @click.stop="removeChannel(ch)">Delete</button>
                     </section>
 
                     <!-- add channel -->
@@ -76,7 +61,48 @@
                 </div>
 
                 <!-- bottom block -->
-                <div class="bottom-bar"></div>
+                <div class="bottom-bar tabs">
+                    <div class="center tab">
+                        <p class="clicked">Channels</p>
+                    </div>
+                    <div class="center tab">
+                        <p class="navigator" @click="toProfile()">Profile</p>
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="screen === 'profile'">
+                <!-- top block -->
+                <div class="top-bar">
+                    <!-- set username -->
+                    <p>
+                    <form @submit.prevent="setUsername">
+                        <input v-model="preferredUsername" placeholder="Choose a username..." />
+                        <input type="submit" value="Set Username" />
+                    </form>
+                    {{ usernameResult }}
+                    </p>
+
+                    <!-- set profile name and picture -->
+                    <p>
+                        <span class="bold">My name is:</span>
+                        <name :actor="$gf.me" :editable="true"></name>
+                        <br>
+                        <br>
+                        <span class="bold">My Profile Picture Is:</span>
+                        <profile-picture :actor="$gf.me" :editable="true"></profile-picture>
+                    </p>
+                </div>
+
+                <!-- bottom block -->
+                <div class="bottom-bar tabs">
+                    <div class="center tab">
+                        <p class="navigator" @click="toMainMenu()">Channels</p>
+                    </div>
+                    <div class="center tab">
+                        <p class="clicked">Profile</p>
+                    </div>
+                </div>
             </div>
 
             <!-- channel description -->
@@ -227,9 +253,10 @@
     </template>
 
     <template id="profile-picture">
-        <magnet-img :src="profile?profile.icon.magnet:anonymous"></magnet-img>
+        <magnet-img class="profile-picture" :src="profile?profile.icon.magnet:anonymous"></magnet-img>
 
         <form v-if="editable" @submit.prevent="savePicture">
+            <br>
             Choose a profile Picture:
             <input type="file" accept="image/*" @change="onPicture" />
             <input type="submit" value="Save" />

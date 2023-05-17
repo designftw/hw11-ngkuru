@@ -1,44 +1,61 @@
 /* width requirement */
-@media (max-width: 600px) {
+/* @media (max-width: 600px) {
     #error-screen {
         display: none;
     }
-}
+} */
 
 @media (min-width: 601px) {
     #app {
-        display: none;
+        max-width: 600px;
     }
 }
 
-/* background color */
+/* background color start */
 
 body {
     background-color: #EEDED5;
 }
 
-/* minor common adjustments */
+/* background color end */
+
+/* minor common adjustments start */
 
 .bold {
     font-weight: bold;
 }
 
-/* alignment start */
 
 .center {
     display: flex;
     justify-content: center;
 }
 
-/* alignment end */
+/* minor common adjustments end */
 
 .top-bar+.middle-block,
-.middle-block+.bottom-bar {
+.middle-block+.bottom-bar,
+.top-bar+.bottom-bar {
     border-top: 1px solid;
 }
 
 .middle-block {
     padding-top: 8px;
+    padding-bottom: 16px;
+}
+
+.tabs {
+    display: flex;
+    align-items: stretch;
+}
+
+.tab {
+    margin-top: 8px;
+    width: 50%;
+}
+
+.tab+.tab {
+    border-left: 1px solid black;
 }
 
 .channel-list-item {
@@ -58,9 +75,17 @@ body {
     border-top: 1px gray solid;
 }
 
+.channel-list-item span+button {
+    margin-left: 8px;
+}
+
 .navigator {
     /* clickable */
     cursor: pointer;
+}
+
+.clicked {
+    font-weight: bold;
 }
 
 .navigator:hover {
@@ -97,4 +122,10 @@ body {
 
 .task-content {
     margin-right: 8px;
+}
+
+.profile-picture {
+    height: 32px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
 }
