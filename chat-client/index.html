@@ -151,10 +151,11 @@
                                 </form>
 
                                 <template v-else>
+                                    <button @click="bumpTask(task)">Bump</button>
                                     <like :messageid="task.id"></like>
                                     <span class="task-content">{{ task.content }}</span>
-                                    <button @click="startEditTask(task)">Edit</button>
-                                    <button @click="removeTask(task)">Delete</button>
+                                    <button v-if="task.actor==$gf.me" @click="startEditTask(task)">Edit</button>
+                                    <button v-if="task.actor==$gf.me" @click="removeTask(task)">Delete</button>
                                 </template>
                             </section>
                         </div>
@@ -173,10 +174,20 @@
                 <!-- center block -->
                 <div class="middle-block">
                     <form @submit.prevent="sendMessage">
+                        <span class="bumping-stuff">
+                            <button v-if="!bumpingTask" @click="startBumpTask()">Bump</button>
+                            <button v-else @click="cancelBumpTask()">Cancel</button>
+                        </span>
                         <input v-model="messageText" placeholder="Type a message..." />
                         <input type="file" accept="image/*" @change="onImageAttachment" />
                         <input type="submit" value="Send" />
                     </form>
+
+                    <div v-if="bumpingTask">
+                        <ul>
+                            <li class="navigator" v-for="task of tasks" @click="bumpTaskFromChat(task)">{{ task.content }}</li>
+                        </ul>
+                    </div>
 
                     <!-- List all the messages -->
                     <ul>

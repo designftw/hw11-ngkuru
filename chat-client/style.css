@@ -151,3 +151,7 @@ body {
 .message-header .minor-info {
     font-weight: normal;
 }
+
+.bumping-stuff {
+    margin-right: 4px;
+}

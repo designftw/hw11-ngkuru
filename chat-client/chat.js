@@ -48,6 +48,7 @@ const app = {
       preferredTask: "",
       editTaskID: "",
       editTaskText: "",
+      bumpingTask: false,
       // text stuff
       messageText: "",
       file: null,
@@ -180,12 +181,21 @@ const app = {
 
     addTask() {
       this.addingTask = false;
+      
       const message = {
         type: 'Task',
         content: this.preferredTask,
         context: [this.channel],
       };
       this.$gf.post(message);
+
+      const chatMessage = {
+        type: 'Note',
+        content: `Created ${this.preferredTask}`,
+        context: [this.channel],
+      }
+      this.$gf.post(chatMessage);
+
       this.preferredTask = "";
     },
 
@@ -195,7 +205,15 @@ const app = {
     },
 
     removeTask(task) {
+      const content = task.content;
       this.$gf.remove(task);
+
+      const chatMessage = {
+        type: 'Note',
+        content: `Removed ${content}`,
+        context: [this.channel],
+      }
+      this.$gf.post(chatMessage);
     },
 
     startEditTask(task) {
@@ -212,6 +230,28 @@ const app = {
     cancelEditTask() {
       this.editTaskID = "";
       this.editTaskText = "";
+    },
+
+    bumpTask(task) {
+      const message = {
+        type: 'Note',
+        content: `Bumping ${task.content}!`,
+        context: [this.channel],
+      };
+      this.$gf.post(message);
+    },
+
+    bumpTaskFromChat(task) {
+      this.bumpingTask = false;
+      this.bumpTask(task);
+    },
+
+    startBumpTask() {
+      this.bumpingTask = true;
+    },
+
+    cancelBumpTask() {
+      this.bumpingTask = false;
     },
 
     // message stuff
